@@ -1,0 +1,9 @@
+FROM php:alpine
+RUN git clone https://github.com/shadiakiki1986/db-ping/shadi_add_sqlserver_driver /code
+WORKDIR /code
+COPY /etc/odbc.ini /etc/
+COPY /etc/odbcinst.ini /etc/
+RUN mkdir -p /var/dbPing
+CMD  php bin/db-ping ODBC -d MarketflowLb -u rou -p rou --repeat 100 --format te --delay 5000 > /var/dbPing/MarketflowLb.txt & \
+  && php bin/db-ping ODBC -d MarketflowAe -u rou -p rou --repeat 100 --format te --delay 5000 > /var/dbPing/MarketflowAe.txt & \
+  tail -f /var/dbPing/MarketflowLb.txt /var/dbPing/MarketflowAe.txt
