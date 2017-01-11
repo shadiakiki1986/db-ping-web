@@ -11,6 +11,5 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.quickPlot
-    ports:
-    - "80:80"
-
+    volumes:
+    - /var/dbPing:/var/dbPing

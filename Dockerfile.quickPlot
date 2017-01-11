@@ -1,9 +1,10 @@
 FROM python:alpine
+RUN pip install pew
 RUN git clone https://github.com/dentearl/quick_plot /code
 WORKDIR /code
 COPY quickPlotRequirements.txt /code/requirements.txt
 RUN pew new QUICK_PLOT -r requirements.txt
 RUN make
-RUN bin/quick_plot /var/dbPing/MarketflowLb.txt --mode scatter --markersize 7.0 --out_format png --out /var/dbPing/MarketflowLb.png --title '2D scatter data from example/data_2d_1.txt' --xlabel 'The x-axis' --ylabel 'The y-axis' --no_legend
+CMD bash entry.quickPlot.sh
 
 
