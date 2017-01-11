@@ -1,0 +1,16 @@
+version: '2'
+services:
+  db_ping:
+    build:
+      context: .
+      dockerfile: Dockerfile.dbPing
+    volumes:
+    - /var/dbPing:/var/dbPing
+
+  quick_plot:
+    build:
+      context: .
+      dockerfile: Dockerfile.quickPlot
+    ports:
+    - "80:80"
+

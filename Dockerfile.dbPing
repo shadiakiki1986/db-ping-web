@@ -1,9 +1,30 @@
-FROM php:alpine
-RUN git clone https://github.com/shadiakiki1986/db-ping/shadi_add_sqlserver_driver /code
+FROM shadiakiki1986/php7-apache-odbc-and-other
+
+# download db-ping
+RUN git clone https://github.com/shadiakiki1986/db-ping -b shadi_add_sqlserver_driver /code
 WORKDIR /code
-COPY /etc/odbc.ini /etc/
-COPY /etc/odbcinst.ini /etc/
+RUN composer install
+
+# install cron
+RUN apt-get update -qq \
+  && DEBIAN_FRONTEND=noninteractive apt-get -qq -y install cron
+
+# install odbc extension
+# based on https://github.com/shadiakiki1986/ffa-zkteco-mfbf/blob/master/copier/Dockerfile
+RUN cd /usr/src/php/ext/pdo_odbc \
+ && phpize \
+ && ./configure --with-pdo-odbc=unixODBC,/usr > /dev/null \
+ && docker-php-ext-install pdo_odbc > /dev/null
+
+# ping and save results to txt
 RUN mkdir -p /var/dbPing
-CMD  php bin/db-ping ODBC -d MarketflowLb -u rou -p rou --repeat 100 --format te --delay 5000 > /var/dbPing/MarketflowLb.txt & \
-  && php bin/db-ping ODBC -d MarketflowAe -u rou -p rou --repeat 100 --format te --delay 5000 > /var/dbPing/MarketflowAe.txt & \
-  tail -f /var/dbPing/MarketflowLb.txt /var/dbPing/MarketflowAe.txt
+RUN touch /etc/cron.d/dbPing \
+  && echo '* * * * * root tail -n 100 /var/dbPing/MarketflowAcc.txt   > /tmp/MarketflowAcc.txt   && mv /tmp/MarketflowAcc.txt   /var/dbPing/MarketflowAcc.txt'   >> /etc/cron.d/dbPing \
+  && echo '* * * * * root tail -n 100 /var/dbPing/MarketflowAccDb.txt > /tmp/MarketflowAccDb.txt && mv /tmp/MarketflowAccDb.txt /var/dbPing/MarketflowAccDb.txt' >> /etc/cron.d/dbPing
+
+# copy odbc files
+COPY etc/odbc.ini /etc/
+COPY etc/odbcinst.ini /etc/
+COPY entry.dbPing.sh .
+
+ENTRYPOINT bash entry.dbPing.sh
