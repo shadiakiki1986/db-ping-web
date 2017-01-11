@@ -1,10 +1,10 @@
 FROM python:alpine
 RUN pip install pew
-RUN git clone https://github.com/dentearl/quick_plot /code
+RUN apk update && apk add git
+
 WORKDIR /code
+RUN git clone --depth 1 https://github.com/dentearl/quick_plot /code
 COPY quickPlotRequirements.txt /code/requirements.txt
 RUN pew new QUICK_PLOT -r requirements.txt
 RUN make
 CMD bash entry.quickPlot.sh
-
-

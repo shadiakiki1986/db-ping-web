@@ -19,8 +19,8 @@ RUN cd /usr/src/php/ext/pdo_odbc \
 # ping and save results to txt
 RUN mkdir -p /var/dbPing
 RUN touch /etc/cron.d/dbPing \
-  && echo '* * * * * root tail -n 100 /var/dbPing/MarketflowAcc.txt   > /tmp/MarketflowAcc.txt   && mv /tmp/MarketflowAcc.txt   /var/dbPing/MarketflowAcc.txt'   >> /etc/cron.d/dbPing \
-  && echo '* * * * * root tail -n 100 /var/dbPing/MarketflowAccDb.txt > /tmp/MarketflowAccDb.txt && mv /tmp/MarketflowAccDb.txt /var/dbPing/MarketflowAccDb.txt' >> /etc/cron.d/dbPing
+  && echo '#* * * * * root tail -n 100 /var/dbPing/MarketflowAcc.txt   > /tmp/MarketflowAcc.txt   && mv /tmp/MarketflowAcc.txt   /var/dbPing/MarketflowAcc.txt'   >> /etc/cron.d/dbPing \
+  && echo '#* * * * * root tail -n 100 /var/dbPing/MarketflowAccDb.txt > /tmp/MarketflowAccDb.txt && mv /tmp/MarketflowAccDb.txt /var/dbPing/MarketflowAccDb.txt' >> /etc/cron.d/dbPing
 
 # copy odbc files
 COPY etc/odbc.ini /etc/
