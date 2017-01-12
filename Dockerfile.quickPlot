@@ -1,16 +1,24 @@
-FROM python:alpine
+FROM python:2-alpine
 RUN pip install pew
-RUN apk update && apk add git
+
+# http://stackoverflow.com/questions/38568476/installing-seaborn-on-docker-alpine#comment70419318_38571314
+RUN echo 'http://dl-4.alpinelinux.org/alpine/latest-stable/community' >> /etc/apk/repositories
+RUN apk --update add --no-cache \
+      git libpng-dev freetype-dev \
+      gcc libc-dev g++ lapack-dev \
+      gfortran make bash
+
+# http://serverfault.com/a/791822/394721
+RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
 
 WORKDIR /code
 RUN git clone --depth 1 https://github.com/dentearl/quick_plot /code
 COPY quickPlotRequirements.txt /code/requirements.txt
 
-RUN apk update && apk add libpng-dev freetype-dev gcc libc-dev g++
+RUN pew new QUICK_PLOT -r requirements.txt
+RUN make
+ENTRYPOINT bash entry.quickPlot.sh
 
-# http://serverfault.com/a/791822/394721
-RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
-
-#RUN pew new QUICK_PLOT -r requirements.txt
-#RUN make
-#CMD bash entry.quickPlot.sh
+# http://stackoverflow.com/a/38571314/4126114
+# removing dependencies
+RUN apk del .build-deps
