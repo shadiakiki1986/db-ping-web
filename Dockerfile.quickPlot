@@ -8,6 +8,10 @@ RUN apk --update add --no-cache \
       gcc libc-dev g++ lapack-dev \
       gfortran make bash
 
+# http://stackoverflow.com/a/38571314/4126114
+# removing dependencies
+# RUN apk del .build-deps
+
 # http://serverfault.com/a/791822/394721
 RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
 
@@ -17,8 +21,6 @@ COPY quickPlotRequirements.txt /code/requirements.txt
 
 RUN pew new QUICK_PLOT -r requirements.txt
 RUN make
-ENTRYPOINT bash entry.quickPlot.sh
 
-# http://stackoverflow.com/a/38571314/4126114
-# removing dependencies
-RUN apk del .build-deps
+COPY entry.quickPlot.sh .
+ENTRYPOINT bash entry.quickPlot.sh

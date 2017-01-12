@@ -11,7 +11,7 @@ do
       --mode scatter \
       --markersize 3.0 \
       --out_format png \
-      --out $i \
+      --out /var/dbPing/$i \
       --title 'MF performance' \
       --xlabel 'timestamp' \
       --xtick_label_column 1 \
