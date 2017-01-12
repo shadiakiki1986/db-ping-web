@@ -17,10 +17,3 @@ docker-compose up -d db_ping
 copy the file,
 remove the `DB-PING` header lines,
 and do: `docker-compose run quick_plot`
-
-## TODO
-1. Link the `quick_plot` worker in the `docker-compose.yml` file to a web app (nginx?)
-that just runs it and serves the generated image
-
-2. pending the issue [No numbers on y-axis #1](https://github.com/dentearl/quick_plot/issues/1)
-
