@@ -6,7 +6,10 @@ WORKDIR /code
 RUN git clone --depth 1 https://github.com/dentearl/quick_plot /code
 COPY quickPlotRequirements.txt /code/requirements.txt
 
-RUN apk update && apk add libpng-dev freetype-dev gcc
+RUN apk update && apk add libpng-dev freetype-dev gcc libc-dev g++
+
+# http://serverfault.com/a/791822/394721
+RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
 
 #RUN pew new QUICK_PLOT -r requirements.txt
 #RUN make
